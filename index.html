@@ -1,1 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>San Valentín para Martín 💖</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #ff4d6d, #ff9aa2, #ffb7b2);
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+      color: white;
+    }
 
+    .card {
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(8px);
+      padding: 40px 50px;
+      border-radius: 25px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+      animation: aparecer 1.2s ease;
+      width: 400px; /* Ancho fijo para que el cálculo no falle */
+      min-height: 300px;
+      position: relative; /* Esto mantiene al botón No bajo control */
+    }
+
+    h1 { font-size: 1.8rem; margin-bottom: 10px; }
+    p { font-size: 1rem; margin-bottom: 25px; }
+
+    #botones {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    button {
+      font-size: 1.2rem;
+      padding: 12px 28px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    #yesBtn {
+      background: #ff1e56;
+      color: white;
+      font-weight: bold;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      animation: latido 1s infinite;
+    }
+
+    @keyframes latido {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    #noBtn { 
+      background: #444; 
+      color: white;
+      position: relative; /* Cambiamos a relative para que no vuele lejos */
+      z-index: 10;
+    }
+
+    #message {
+      margin-top: 20px;
+      font-size: 1.4rem;
+      display: none;
+    }
+
+    #mario {
+      display: none;
+      margin-top: 20px;
+    }
+
+    #mario img {
+      width: 200px;
+      border-radius: 15px;
+    }
+
+    .heart {
+      position: fixed;
+      color: #ff1e56;
+      font-size: 20px;
+      animation: fall linear forwards;
+      pointer-events: none;
+    }
+
+    @keyframes fall {
+      from { transform: translateY(-10vh); opacity: 1; }
+      to { transform: translateY(110vh); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="card" id="mainCard">
+  <h1>💖 Matias Alonso, ¿Quieres ser mi San Valentín? 💖</h1>
+  <p>Prometo darte un lindo día, llenarte de besos y amarte con todo mi corazón 😌💘</p>
+  
+  <div id="botones">
+    <button id="yesBtn">Sí 💕</button>
+    <button id="noBtn">No 💔</button>
+  </div>
+
+  <div id="message">🥰 Sabía que dirías que sí, mi vidaa. Gracias por hacerme tan feliz 💖</div>
+  
+  <div id="mario">
+    <img src="https://i.pinimg.com/originals/7c/d2/8b/7cd28bae42ee1d93dbbfb87699423751.jpg" alt="Mario y Peach">
+  </div>
+</div>
+
+<script>
+  const yesBtn = document.getElementById("yesBtn");
+  const noBtn = document.getElementById("noBtn");
+  const message = document.getElementById("message");
+  const mario = document.getElementById("mario");
+  const contenedorBotones = document.getElementById("botones");
+
+  let frases = [
+    "¿Seguro?",
+    "¿De verdad muy seguro?",
+    "¿Amorcito :(?",
+    "¿Ah, de verdad no quieres? ",
+    "¿Sigues presionando que no? ",
+    "MATIAS ALONSOO.. ",
+    "¿Bueno...",
+    "La verdad es que no puedes salvarte de esta jiji"
+  ];
+
+  let contadorFrases = 0;
+  let contadorEscapes = 0;
+  let modoEscape = false;
+
+  yesBtn.addEventListener("click", () => {
+    message.style.display = "block";
+    mario.style.display = "block";
+    contenedorBotones.style.display = "none";
+    for (let i = 0; i < 40; i++) {
+      crearCorazon();
+    }
+  });
+
+  noBtn.addEventListener("click", () => {
+    if (contadorFrases < frases.length) {
+      noBtn.innerText = frases[contadorFrases];
+      contadorFrases++;
+      if (contadorFrases === frases.length) {
+        modoEscape = true;
+      }
+    } 
+    else if (modoEscape && contadorEscapes < 5) {
+      // MOVIMIENTO CONTROLADO: Ahora usa 'absolute' respecto a la Card
+      noBtn.style.position = "absolute";
+      
+      // Generamos posiciones aleatorias pero dentro de la tarjeta blanca (400x300)
+      const randomX = Math.floor(Math.random() * 250) + 50; 
+      const randomY = Math.floor(Math.random() * 150) + 100; 
+
+      noBtn.style.left = randomX + "px";
+      noBtn.style.top = randomY + "px";
+      
+      contadorEscapes++;
+    } 
+    else {
+      noBtn.style.display = "none";
+      alert("¡QUE NO PUEDES PRESIONAR QUE NO! 😤💖");
+    }
+  });
+
+  function crearCorazon() {
+    const heart = document.createElement("div");
+    heart.classList.add("heart");
+    heart.innerHTML = "💖";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.animationDuration = Math.random() * 2 + 3 + "s";
+    document.body.appendChild(heart);
+    setTimeout(() => { heart.remove(); }, 5000);
+  }
+</script>
+
+</body>
+</html>
